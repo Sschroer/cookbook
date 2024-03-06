@@ -1,5 +1,11 @@
 package cookbook;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
 /**
@@ -8,10 +14,14 @@ import java.util.Scanner;
  *
  */
 public class CookbookManager {
-	private static Cookbook current; // This is where a new cookbook or old
+	private static Cookbook currentBook; // This is where a new cookbook or old
 										// cookbook will be loaded to.
 	private static Scanner scnr = new Scanner(System.in);
 	private static int choice;
+	private static String desktopPath = System.getProperty("user.home") + "/Desktop";
+	private static String folderName = "Cookbooks";
+	private static File saveFolder = new File(desktopPath, folderName);
+	private static String saveFolderPath = desktopPath + "/" + folderName;
 
 	/*
 	 * This will be the main application. This app will display the main menu
@@ -19,7 +29,8 @@ public class CookbookManager {
 	 * edit/view recipies in them.
 	 */
 	public static void main(String[] args) {
-
+		saveFolderCheck();
+		
 		while (true) {
 			display("""
 					~~Cookbook Manager~~
@@ -30,39 +41,40 @@ public class CookbookManager {
 					3. Save Cookbook
 					4. Exit
 					""");
-
 			choice = scnr.nextInt();
-
+			
 			switch (choice) {
 				case 1 :
+					breakline();
 					String name;
 					display("Type title of new cookbook.");
 					scnr.nextLine();
 					name = scnr.nextLine();
-					current = new Cookbook(name);
+					currentBook = new Cookbook(name);
 					display("");
 					cookbookMenu();
 					display("");
 					break;
 				case 2 :
-					// ask user for cookbook name, locate cookbook and assign to
-					// current.
-					// run cookbookMenu method
-					display("need to display sub-menu of loaded cookbook");
+					breakline();
+					loadCookbook();
 					cookbookMenu();
 					display("");
 					break;
 				case 3 :
-					// save cookbook object to file/directory
-					display("cookbook saved.");
+					breakline();
+					saveCookbook();
+					display("Cookbook sucessfully saved.");
 					display("");
 					break;
 				case 4 :
+					breakline();
 					display("Exiting Cookbook Manager...");
 					scnr.close();
-					display("");
+					breakline();
 					System.exit(0);
 				default :
+					breakline();
 					display("Invalid choice.");
 					display("");
 			}
@@ -82,7 +94,7 @@ public class CookbookManager {
 	 * This method displays the menu of the current cookbook.
 	 */
 	private static void cookbookMenu() {
-		String cbName = current.getTitle();
+		String cbName = currentBook.getTitle();
 
 		do {
 			display("~" + cbName + "~");
@@ -101,7 +113,7 @@ public class CookbookManager {
 			switch (choice) {
 				case 1 :
 					display("**Recipes**");
-					current.displayContents();
+					currentBook.displayContents();
 					display("");
 					break;
 				case 2 :
@@ -127,12 +139,67 @@ public class CookbookManager {
 					break;
 				default :
 					display("Invalid choice.");
-					display("");
+					breakline();
 					break;
 			}
 		} while (choice != 5);
 
 	}
 
+	/**
+	 * Checks for a folder on users desktop to save cookbooks to. If there isn't
+	 * one then one will be created.
+	 */
+	private static void saveFolderCheck() {
+		if (!saveFolder.exists()) {
+			saveFolder.mkdir();
+		}
+	}
+	
+	/**
+	 * Saves current cookbook to Cookbooks folder.
+	 */
+	private static void saveCookbook() {
+		 String fileName = currentBook.getTitle().toUpperCase();
+		
+		 try {
+			FileOutputStream newSave = new FileOutputStream(saveFolderPath + "/"+ fileName + ".save");
+			ObjectOutputStream oos = new ObjectOutputStream(newSave);
+			oos.writeObject(currentBook);
+			oos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * This method loads asks the user which cookbook they want to load, and opens it.
+	 */
+	private static void loadCookbook() {
+		display("What cookbook do you want to load?");
+		scnr.nextLine(); //if a newline character needs to be consumed always use this.
+		
+		String cookbookName = scnr.nextLine();
+		String fileName = cookbookName.toUpperCase();
+		String folderPath = System.getProperty("user.home") + "/Desktop/Cookbooks";
+		String filePath = folderPath + "/" + fileName + ".save";
+	
+		
+		try {
+			FileInputStream fileIn = new FileInputStream(filePath);
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			currentBook = (Cookbook) in.readObject();
+			in.close();
+			
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
+		breakline();
+	}
+	
+	private static void breakline() {
+		display ("-----------------------------------------------");
+	}
 }
 
