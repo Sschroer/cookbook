@@ -11,6 +11,8 @@ import java.util.Objects;
  * @author Stephen Schroer
  *
  */
+
+
 @SuppressWarnings("serial")
 public class Cookbook implements Serializable {
 	private String title;
@@ -119,6 +121,13 @@ public class Cookbook implements Serializable {
 		}
 	}
 
+	public Recipe getRecipe(String recipeName) {
+		if (contains(recipeName)) {
+			return recipes.get(getIndex(recipeName));
+		} else {
+			return null;
+		}
+	}
 	/**
 	 * Displays requested recipie
 	 * 
@@ -128,9 +137,6 @@ public class Cookbook implements Serializable {
 	public void showRecipe(String recipeName) throws Exception {
 		if (contains(recipeName)) {
 			System.out.println(recipes.get(getIndex(recipeName)).toString());
-		} else {
-			throw new Exception(
-					"The recipe requested is not in this cookbook.");
 		}
 	}
 

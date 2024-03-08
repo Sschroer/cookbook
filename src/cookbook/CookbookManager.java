@@ -3,6 +3,7 @@ package cookbook;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -63,7 +64,6 @@ public class CookbookManager {
 	}
 
 	private static void mainMenuChoices() {
-
 		choice = scnr.nextInt();
 
 		switch (choice) {
@@ -74,21 +74,20 @@ public class CookbookManager {
 				scnr.nextLine();
 				name = scnr.nextLine();
 				currentBook = new Cookbook(name);
-				display("");
+				breakline();
 				cookbookMenu();
-				display("");
+				breakline();
 				break;
 			case 2 :
 				breakline();
 				loadCookbook();
 				cookbookMenu();
-				display("");
-				break;
+				breakline();
 			case 3 :
 				breakline();
 				saveCookbook();
 				display("Cookbook sucessfully saved.");
-				display("");
+				breakline();
 				break;
 			case 4 :
 				breakline();
@@ -99,7 +98,7 @@ public class CookbookManager {
 			default :
 				breakline();
 				display("Invalid choice.");
-				display("");
+				breakline();
 		}
 	}
 
@@ -127,7 +126,7 @@ public class CookbookManager {
 			switch (choice) {
 				case 1 :
 					breakline();
-					display("**Recipes**");
+					display("**Recipes** \n");
 					currentBook.displayContents();
 					breakline();
 					break;
@@ -148,13 +147,18 @@ public class CookbookManager {
 					break;
 				case 5 :
 					breakline();
-					exportRecipe();
+					
+					try {
+						exportRecipe();
+					} catch (Exception e) {
+						display(" The requested recipe is not in the cookbook.");
+					}
+					
 					breakline();
 					break;
 				case 6 :
 					breakline();
 					display("Exiting...");
-					breakline();
 					break;
 				default :
 					breakline();
@@ -169,19 +173,121 @@ public class CookbookManager {
 	/**
 	 * This method exports the toString of requested recipe as a .txt file and
 	 * saves it to the desktop for immediate user use.
+	 * 
+	 * @throws Exception
 	 */
-	private static void exportRecipe() {
-		display("function coming soon");
+	private static void exportRecipe() throws Exception {
+		display("Which recipe do you want to export?");
+		scnr.nextLine();
 
+		String recipeName = scnr.nextLine();
+		String fileName = currentBook.getRecipe(recipeName).getName() + ".txt";
+		String filePath = desktopPath + "/" + fileName;
+		String fileContent = currentBook.getRecipe(recipeName).toString();
+
+		if (currentBook.contains(recipeName)) {
+			try {
+				FileWriter writer = new FileWriter(new File(filePath));
+				writer.write(fileContent);
+				writer.write("\nRecipe from " + currentBook.getTitle());
+				writer.write("\nCreated using Cookbook Manager");
+				writer.close();
+			} catch (IOException e) {
+				display(e.getMessage());
+			}
+			display("This recipe was sucessfully exported to your desktop.");
+		}
 	}
 
 	/**
-	 * finds requested recipie and user chooses to edit recipe name,
-	 * ingredients, or instructions.
+	 * finds requested recipe and user chooses to edit recipe name, ingredients,
+	 * or instructions.
 	 */
 	private static void modifyRecipe() {
-		display("function coming soon");
+		display("Which recipe do you want to modify?");
+		scnr.nextLine();
+		Recipe recipe = currentBook.getRecipe(scnr.nextLine());
+		breakline();
+		
+		do{
+			display("**" + recipe.getName() + "**");
+			display("""
+					
+					1. Change name
+					2. Edit ingredients
+					3. Edit instructions
+					4. Return to cookbook menu
+					
+					""");
+			
+			choice = scnr.nextInt();
+			switch(choice) {
+				case 1:
+					breakline();
+					display("What is the new name for this recipe?");
+					scnr.nextLine();
+					recipe.setName(scnr.nextLine());
+					breakline();
+					break;
+				case 2:
+					breakline();
+					display("""
+							Please enter all ingredients (with amounts) on seperate lines.
+							Enter done on new line when finished.
+							""");
+					recipe.setIngredients(getNewIngredientList());
+					breakline();
+					break;
+				case 3:
+					breakline();
+					display("""
+							Enter each instuction on a seperate line.
+							Type 'done' on a new line to finish.
+							""");
+					recipe.setInstructions(getNewInstructions());
+					breakline();
+					break;
+				case 4:
+					breakline();
+					display("Returning to cookbook menu");
+					breakline();
+			}
+			
+		}while(choice != 4);
+		saveCookbook();
+	}
 
+	private static String getNewInstructions() {
+		StringBuilder instructions = new StringBuilder();
+		scnr.nextLine();
+
+		// Read lines until the user types 'done'
+		while (true) {
+			String line = scnr.nextLine();
+			if (line.equals("done")) {
+				break;
+			}
+			instructions.append(line).append("\n");
+		}
+		return instructions.toString();
+	}
+
+	private static ArrayList<String> getNewIngredientList() {
+		String ingredient = "";
+		ArrayList<String> ingredientList = new ArrayList<>();
+
+		while (true) {
+			ingredient = scnr.nextLine();
+			if (ingredient.equalsIgnoreCase("done")) {
+				break;
+			}
+
+			ingredientList.add(ingredient);
+		}
+		return ingredientList;
+		
+		
+		
 	}
 
 	/**
@@ -237,7 +343,7 @@ public class CookbookManager {
 	}
 
 	private static void breakline() {
-		display("-----------------------------------------------");
+		display("----------------------------------------------- \n");
 	}
 
 	/**
@@ -248,6 +354,8 @@ public class CookbookManager {
 		scnr.nextLine();
 
 		String recipeName = scnr.nextLine();
+
+		breakline();
 
 		try {
 			currentBook.showRecipe(recipeName);
@@ -269,38 +377,23 @@ public class CookbookManager {
 				Enter 'done' on a new line when finished.
 				""");
 
-		String ingredient = "";
-		ArrayList<String> ingredientList = new ArrayList<>();
+		
+		ArrayList<String> ingredientList = getNewIngredientList();
 
-		while (true) {
-			ingredient = scnr.nextLine();
-			if (ingredient.equalsIgnoreCase("done")) {
-				break;
-			}
-
-			ingredientList.add(ingredient);
-		}
 
 		display("""
-				Enter instuctions separately.
+				Enter each instuction on a seperate line.
 				Type 'done' on a new line to finish.
 				""");
 
-		StringBuilder instructions = new StringBuilder();
-
-		// Read lines until the user types 'done'
-		while (true) {
-			String line = scnr.nextLine();
-			if (line.equals("done")) {
-				break;
-			}
-			instructions.append(line).append("\n");
-		}
+		String instructions = getNewInstructions();
 
 		Recipe newRecipe = new Recipe(recipeName, ingredientList,
-				instructions.toString());
+				instructions);
+		
 		currentBook.getRecipes().add(newRecipe);
 
-		display(recipeName + " sucessfully added.");
+		saveCookbook();
+		display(recipeName + " sucessfully saved.");
 	}
 }
