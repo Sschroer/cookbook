@@ -7,6 +7,7 @@ import java.util.Objects;
 
 /**
  * This is the cookbook object.
+ * 
  * @author Stephen Schroer
  *
  */
@@ -90,6 +91,7 @@ public class Cookbook implements Serializable {
 		System.out.println(contents);
 	}
 	/**
+	 * This method returns the index of a requested recipe.
 	 * 
 	 * @param recipeName
 	 * @return
@@ -97,10 +99,10 @@ public class Cookbook implements Serializable {
 	private int getIndex(String recipeName) {
 		for (int i = 0; i < recipes.size(); i++) {
 			if (recipes.get(i).getName().equalsIgnoreCase(recipeName)) {
-				return i; // Return index if found
+				return i;
 			}
 		}
-		return -1; // Return -1 if not found
+		return -1;
 	}
 
 	/**
@@ -140,7 +142,7 @@ public class Cookbook implements Serializable {
 	@Override
 	public int hashCode() {
 		return Objects.hash(recipes, title);
-		//auto generated
+		// auto generated
 	}
 
 	@Override
@@ -154,11 +156,7 @@ public class Cookbook implements Serializable {
 		Cookbook other = (Cookbook) obj;
 		return Objects.equals(recipes, other.recipes)
 				&& Objects.equals(title, other.title);
-		//auto generated
+		// auto generated
 	}
-	
-	
-	
-	
 
 }
