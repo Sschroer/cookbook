@@ -264,7 +264,7 @@ public class CookbookManager {
 		// Read lines until the user types 'done'
 		while (true) {
 			String line = scnr.nextLine();
-			if (line.equals("done")) {
+			if (line.equalsIgnoreCase("done")) {
 				break;
 			}
 			instructions.append(line).append("\n");
