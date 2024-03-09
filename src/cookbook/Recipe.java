@@ -121,7 +121,7 @@ public class Recipe implements Serializable {
 	        sb.append(String.format("%-" + columnWidth + "s", ingredients.get(midpoint))).append("\n");
 	    }
 
-	    sb.append("\nInstructions:\n").append(instructions);
+	    sb.append("Instructions:\n").append(instructions);
 	    return sb.toString();
 	}
 
