@@ -91,8 +91,38 @@ public class Recipe implements Serializable {
 	}
 	@Override
 	public String toString() {
-		return name + "\n" + "Ingredients: " + ingredients + "\n"
-				+ "Instructions:\n" + instructions;
+		StringBuilder sb = new StringBuilder();
+	    sb.append(name).append("\n");
+	    sb.append("Ingredients:\n");
+
+	    // Calculate the midpoint of the ingredients list to split into two columns
+	    int midpoint = ingredients.size() / 2;
+
+	    // Find the maximum length of ingredient to determine the width of the first column
+	    int maxWidth = 0;
+	    for (String ingredient : ingredients) {
+	        maxWidth = Math.max(maxWidth, ingredient.length());
+	    }
+	    int columnWidth = maxWidth + 5; // Adjust the column width as needed
+
+	    // Append ingredients in two columns
+	    for (int i = 0; i < midpoint; i++) {
+	        String ingredient1 = ingredients.get(i);
+	        String ingredient2 = (i + midpoint < ingredients.size()) ? ingredients.get(i + midpoint) : "";
+
+	        sb.append(String.format("%-" + columnWidth + "s", ingredient1))
+	          .append("\t\t")
+	          .append(String.format("%-" + columnWidth + "s", ingredient2))
+	          .append("\n");
+	    }
+
+	    // If the number of ingredients is odd, append the last ingredient in the first column
+	    if (ingredients.size() % 2 != 0) {
+	        sb.append(String.format("%-" + columnWidth + "s", ingredients.get(midpoint))).append("\n");
+	    }
+
+	    sb.append("\nInstructions:\n").append(instructions);
+	    return sb.toString();
 	}
 
 	@Override
