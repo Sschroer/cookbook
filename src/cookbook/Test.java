@@ -43,47 +43,19 @@ public class Test {
 	        System.out.println("Enter a text block (type 'end' on a new line to finish):");
 	        StringBuilder textBlock = new StringBuilder();
 
-	        // Read lines until the user types 'end'
-	        while (true) {
-	            String line = scanner.nextLine();
-	            if (line.equals("end")) {
-	                break;
-	            }
-	            textBlock.append(line).append("\n"); // Append each line to the text block
-	        }
+			// Read lines until the user types 'end'
+			while (true) {
+				String line = scanner.nextLine();
+				if (line.equals("end")) {
+					break;
+				}
+				textBlock.append(line).append("\n"); // Append each line to the
+														// text block
+			}
 
-	        System.out.println("You entered the following text block:");
-	        System.out.println(textBlock.toString());
+			System.out.println("You entered the following text block:");
+			System.out.println(textBlock.toString());
 
-	        scanner.close();
-	        
+			scanner.close();
+		}
 	}
-
-	//updated toString for recipe class
-    public String toString() {
-    	StringBuilder sb = new StringBuilder();
-        sb.append(name).append("\n");
-        sb.append("Ingredients:\n");
-        
-        // Calculate the midpoint of the ingredients list to split into two columns
-        int midpoint = ingredients.size() / 2;
-
-        // Append ingredients in two columns
-        for (int i = 0; i < midpoint; i++) {
-            sb.append(ingredients.get(i)).append("\t\t").append(ingredients.get(i + midpoint)).append("\n");
-        }
-
-        // If the number of ingredients is odd, append the last ingredient in the first column
-        if (ingredients.size() % 2 != 0) {
-            sb.append(ingredients.get(midpoint)).append("\n");
-        }
-        
-        sb.append("Instructions:\n").append(instructions);
-        return sb.toString();
-        
-        /*
-         * return name + "\n" + "Ingredients: " + ingredients + "\n"
-				+ "Instructions:\n" + instructions;  //original to string
-         */
-    }
-}

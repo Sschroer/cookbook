@@ -80,7 +80,8 @@ public class CookbookManager {
 				break;
 			case 2 :
 				breakline();
-				loadCookbook();
+				currentBook = getCookbook();
+				breakline();
 				cookbookMenu();
 				breakline();
 			case 3 :
@@ -206,55 +207,61 @@ public class CookbookManager {
 	private static void modifyRecipe() {
 		display("Which recipe do you want to modify?");
 		scnr.nextLine();
-		Recipe recipe = currentBook.getRecipe(scnr.nextLine());
-		breakline();
+		String name = scnr.nextLine();
 		
-		do{
-			display("**" + recipe.getName() + "**");
-			display("""
-					
-					1. Change name
-					2. Edit ingredients
-					3. Edit instructions
-					4. Return to cookbook menu
-					
-					""");
-			
-			choice = scnr.nextInt();
-			switch(choice) {
-				case 1:
-					breakline();
-					display("What is the new name for this recipe?");
-					scnr.nextLine();
-					recipe.setName(scnr.nextLine());
-					breakline();
-					break;
-				case 2:
-					breakline();
-					display("""
-							Please enter all ingredients (with amounts) on seperate lines.
-							Enter done on new line when finished.
-							""");
-					recipe.setIngredients(getNewIngredientList());
-					breakline();
-					break;
-				case 3:
-					breakline();
-					display("""
-							Enter each instuction on a seperate line.
-							Type 'done' on a new line to finish.
-							""");
-					recipe.setInstructions(getNewInstructions());
-					breakline();
-					break;
-				case 4:
-					breakline();
-					display("Returning to cookbook menu");
-					breakline();
-			}
-			
-		}while(choice != 4);
-		saveCookbook();
+		if (currentBook.contains(name)) {
+			Recipe recipe = currentBook.getRecipe(name);
+			breakline();
+
+			do {
+				display("**" + recipe.getName() + "**");
+				display("""
+
+						1. Change name
+						2. Edit ingredients
+						3. Edit instructions
+						4. Return to cookbook menu
+
+						""");
+
+				choice = scnr.nextInt();
+				switch (choice) {
+					case 1 :
+						breakline();
+						display("What is the new name for this recipe?");
+						scnr.nextLine();
+						recipe.setName(scnr.nextLine());
+						breakline();
+						break;
+					case 2 :
+						breakline();
+						display("""
+								Please enter all ingredients (with amounts) on seperate lines.
+								Enter done on new line when finished.
+								""");
+						recipe.setIngredients(getNewIngredientList());
+						breakline();
+						break;
+					case 3 :
+						breakline();
+						display("""
+								Enter each instuction on a seperate line.
+								Type 'done' on a new line to finish.
+								""");
+						recipe.setInstructions(getNewInstructions());
+						breakline();
+						break;
+					case 4 :
+						breakline();
+						display("Returning to cookbook menu");
+						breakline();
+				}
+
+			} while (choice != 4);
+			saveCookbook();
+		}else {
+			display("The recipe requested does not exist in this cookbook.");
+		}
 	}
 
 	private static String getNewInstructions() {
@@ -318,28 +325,29 @@ public class CookbookManager {
 	}
 
 	/**
-	 * This method loads asks the user which cookbook they want to load, and
-	 * opens it.
+	 * This general use load method asks the user which cookbook they want to get and
+	 * retrieves it. 
 	 */
-	private static void loadCookbook() {
-		display("What cookbook do you want to load?");
+	private static Cookbook getCookbook() {
+		display("What cookbook do you want to get?");
 		scnr.nextLine();
 
 		String cookbookName = scnr.nextLine().toUpperCase();
-		String folderPath = System.getProperty("user.home")
-				+ "/Desktop/Cookbooks";
-		String filePath = folderPath + "/" + cookbookName + ".save";
+		String filePath = saveFolderPath + "/" + cookbookName + ".save";
 
 		try {
 			FileInputStream fileIn = new FileInputStream(filePath);
 			ObjectInputStream in = new ObjectInputStream(fileIn);
-			currentBook = (Cookbook) in.readObject();
+			Cookbook fetchedBook = (Cookbook) in.readObject();
 			in.close();
+			return fetchedBook;
+			
 
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
-		breakline();
+		
+		return currentBook;
 	}
 
 	private static void breakline() {
