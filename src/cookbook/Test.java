@@ -24,6 +24,15 @@ public class Test {
 		
 		System.out.println(testBook.getTitle());
 		testBook.displayContents();
+		System.out.println(pbj.addTag("sandwich") + " = true");
+		
+		try {
+			pbj.addTag("Korean");
+		} catch (TypeNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.getMessage();
+		}
+		
 		testBook.showRecipe("PB&J");
 		
 		System.out.println(testBook.contains("Bananna Bread") + " = true");
@@ -57,5 +66,9 @@ public class Test {
 			System.out.println(textBlock.toString());
 
 			scanner.close();
-		}
+	
+	
+	
+	}
+	
 	}

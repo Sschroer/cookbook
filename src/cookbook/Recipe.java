@@ -2,13 +2,20 @@ package cookbook;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Objects;
 
+/**
+ * This the Recipe Class
+ * @author Stephen Schroer
+ *
+ */
 @SuppressWarnings("serial")
 public class Recipe implements Serializable {
 	private String name;
 	private ArrayList<String> ingredients;
 	private String instructions;
+	private LinkedList<MealType> tagList;
 
 	/**
 	 * 
@@ -17,6 +24,7 @@ public class Recipe implements Serializable {
 		name = "";
 		ingredients = new ArrayList<>();
 		instructions = "";
+		tagList = new LinkedList<>();
 	}
 
 	/**
@@ -26,6 +34,7 @@ public class Recipe implements Serializable {
 		this.name = name;
 		ingredients = new ArrayList<>();
 		instructions = "";
+		tagList = new LinkedList<>();
 	}
 
 	/**
@@ -36,6 +45,7 @@ public class Recipe implements Serializable {
 		this.name = name;
 		this.ingredients = ingredients;
 		instructions = "";
+		tagList = new LinkedList<>();
 	}
 
 	/**
@@ -48,6 +58,21 @@ public class Recipe implements Serializable {
 		this.name = name;
 		this.ingredients = ingredients;
 		this.instructions = instructions;
+		tagList = new LinkedList<>();
+	}
+		
+	/**
+	 * @param name
+	 * @param ingredients
+	 * @param instructions
+	 * @param type
+	 */
+	public Recipe(String name, ArrayList<String> ingredients,
+			String instructions, MealType tag) {
+		this.name = name;
+		this.ingredients = ingredients;
+		this.instructions = instructions;
+		tagList.add(tag);
 	}
 
 	/**
@@ -88,7 +113,57 @@ public class Recipe implements Serializable {
 	 */
 	public void setInstructions(String instructions) {
 		this.instructions = instructions;
+	}	
+	
+	
+	/**
+	 * @return the tagList
+	 */
+	public LinkedList<MealType> getTagList() {
+		return tagList;
 	}
+
+	/**
+	 * @param tagList the tagList to set
+	 */
+	public void setTagList(LinkedList<MealType> tagList) {
+		this.tagList = tagList;
+	}
+
+	/**
+	 * This method adds a tag to the tagList
+	 * 
+	 * @param tag
+	 * @return
+	 * @throws Exception 
+	 */
+	public boolean addTag(String tag) throws TypeNotFoundException {
+		String modTag = tag.replaceAll(" ", "_");
+		MealType foodType = getType(modTag);
+
+		if (foodType != null) {
+			tagList.add(foodType);
+			return true;
+		}
+
+		throw new TypeNotFoundException("The Tag you entered does not exist.");
+	}
+
+	/**
+	 * This method checks to see if the tag exists in the enum list.
+	 * @param tag
+	 * @return
+	 */
+	private MealType getType(String tag) {
+		for (MealType type : MealType.values()) {
+			if (type.toString().equalsIgnoreCase(tag)) {
+				return type;
+			}
+		}
+		return null;
+	}
+	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -121,7 +196,7 @@ public class Recipe implements Serializable {
 	        sb.append(String.format("%-" + columnWidth + "s", ingredients.get(midpoint))).append("\n");
 	    }
 
-	    sb.append("Instructions:\n").append(instructions);
+	    sb.append("Instructions:\n").append(instructions).append("Tags: " + tagList);
 	    return sb.toString();
 	}
 

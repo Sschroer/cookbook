@@ -10,7 +10,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/**
+/**This is the cookbook manager Application.
  * 
  * @author Stephen Schroer
  *
@@ -80,6 +80,7 @@ public class CookbookManager {
 				break;
 			case 2 :
 				breakline();
+				display("What cookbook do you want to load?");
 				currentBook = getCookbook();
 				breakline();
 				cookbookMenu();
@@ -220,7 +221,8 @@ public class CookbookManager {
 						1. Change name
 						2. Edit ingredients
 						3. Edit instructions
-						4. Return to cookbook menu
+						4. Add tag
+						5. Return to cookbook menu
 
 						""");
 
@@ -253,11 +255,28 @@ public class CookbookManager {
 						break;
 					case 4 :
 						breakline();
+						display("""
+								What tag do you want to add?
+								""");
+						scnr.nextLine();
+						String tag = scnr.nextLine();
+						
+						try {
+							recipe.addTag(tag);
+						} catch (TypeNotFoundException e) {
+							e.getMessage();
+						}
+						
+						breakline();
+						break;
+						
+					case 5 :
+						breakline();
 						display("Returning to cookbook menu");
 						breakline();
 				}
 
-			} while (choice != 4);
+			} while (choice != 5);
 			saveCookbook();
 		}else {
 			display("The recipe requested does not exist in this cookbook.");
@@ -329,7 +348,6 @@ public class CookbookManager {
 	 * retrieves it. 
 	 */
 	private static Cookbook getCookbook() {
-		display("What cookbook do you want to get?");
 		scnr.nextLine();
 
 		String cookbookName = scnr.nextLine().toUpperCase();
