@@ -2,7 +2,7 @@ package cookbook;
 
 /**
  * This is the TypeNotFound custom exception.
- * @author steph
+ * @author Stephen Schroer
  *
  */
 public class TypeNotFoundException extends Exception {

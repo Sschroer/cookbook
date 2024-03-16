@@ -2,11 +2,12 @@ package cookbook;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.Objects;
 
 /**
  * This the Recipe Class
+ * 
  * @author Stephen Schroer
  *
  */
@@ -15,7 +16,7 @@ public class Recipe implements Serializable {
 	private String name;
 	private ArrayList<String> ingredients;
 	private String instructions;
-	private LinkedList<MealType> tagList;
+	private HashSet<MealType> tagList;
 
 	/**
 	 * 
@@ -24,7 +25,7 @@ public class Recipe implements Serializable {
 		name = "";
 		ingredients = new ArrayList<>();
 		instructions = "";
-		tagList = new LinkedList<>();
+		tagList = new HashSet<>();
 	}
 
 	/**
@@ -34,7 +35,7 @@ public class Recipe implements Serializable {
 		this.name = name;
 		ingredients = new ArrayList<>();
 		instructions = "";
-		tagList = new LinkedList<>();
+		tagList = new HashSet<>();
 	}
 
 	/**
@@ -45,7 +46,7 @@ public class Recipe implements Serializable {
 		this.name = name;
 		this.ingredients = ingredients;
 		instructions = "";
-		tagList = new LinkedList<>();
+		tagList = new HashSet<>();
 	}
 
 	/**
@@ -58,9 +59,9 @@ public class Recipe implements Serializable {
 		this.name = name;
 		this.ingredients = ingredients;
 		this.instructions = instructions;
-		tagList = new LinkedList<>();
+		tagList = new HashSet<>();
 	}
-		
+
 	/**
 	 * @param name
 	 * @param ingredients
@@ -72,6 +73,8 @@ public class Recipe implements Serializable {
 		this.name = name;
 		this.ingredients = ingredients;
 		this.instructions = instructions;
+
+		tagList = new HashSet<>();
 		tagList.add(tag);
 	}
 
@@ -113,20 +116,20 @@ public class Recipe implements Serializable {
 	 */
 	public void setInstructions(String instructions) {
 		this.instructions = instructions;
-	}	
-	
-	
+	}
+
 	/**
 	 * @return the tagList
 	 */
-	public LinkedList<MealType> getTagList() {
+	public HashSet<MealType> getTagList() {
 		return tagList;
 	}
 
 	/**
-	 * @param tagList the tagList to set
+	 * @param tagList
+	 *            the tagList to set
 	 */
-	public void setTagList(LinkedList<MealType> tagList) {
+	public void setTagList(HashSet<MealType> tagList) {
 		this.tagList = tagList;
 	}
 
@@ -135,75 +138,88 @@ public class Recipe implements Serializable {
 	 * 
 	 * @param tag
 	 * @return
-	 * @throws Exception 
+	 * @throws TypeNotFoundException
 	 */
-	public boolean addTag(String tag) throws TypeNotFoundException {
+	public boolean addTag(String tag)  {
 		String modTag = tag.replaceAll(" ", "_");
-		MealType foodType = getType(modTag);
-
-		if (foodType != null) {
+		MealType foodType;
+		
+		try {
+			foodType = getType(modTag);
 			tagList.add(foodType);
 			return true;
+			
+		} catch (TypeNotFoundException e) {
+			e.printStackTrace();
+			return false;
 		}
-
-		throw new TypeNotFoundException("The Tag you entered does not exist.");
+	
 	}
 
 	/**
 	 * This method checks to see if the tag exists in the enum list.
+	 * 
 	 * @param tag
 	 * @return
+	 * @throws TypeNotFoundException
 	 */
-	private MealType getType(String tag) {
+	private MealType getType(String tag) throws TypeNotFoundException {
 		for (MealType type : MealType.values()) {
 			if (type.toString().equalsIgnoreCase(tag)) {
 				return type;
 			}
 		}
-		return null;
+
+		throw new TypeNotFoundException("The Tag you entered does not exist.");
 	}
-	
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-	    sb.append(name).append("\n");
-	    sb.append("Ingredients:\n");
+		sb.append(name).append("\n");
+		sb.append("Ingredients:\n");
 
-	    // Calculate the midpoint of the ingredients list to split into two columns
-	    int midpoint = ingredients.size() / 2;
+		// Calculate the midpoint of the ingredients list to split into two
+		// columns
+		int midpoint = ingredients.size() / 2;
 
-	    // Find the maximum length of ingredient to determine the width of the first column
-	    int maxWidth = 0;
-	    for (String ingredient : ingredients) {
-	        maxWidth = Math.max(maxWidth, ingredient.length());
-	    }
-	    int columnWidth = maxWidth + 5; // Adjust the column width as needed
+		// Find the maximum length of ingredient to determine the width of the
+		// first column
+		int maxWidth = 0;
+		for (String ingredient : ingredients) {
+			maxWidth = Math.max(maxWidth, ingredient.length());
+		}
+		int columnWidth = maxWidth + 5; // Adjust the column width as needed
 
-	    // Append ingredients in two columns
-	    for (int i = 0; i < midpoint; i++) {
-	        String ingredient1 = ingredients.get(i);
-	        String ingredient2 = (i + midpoint < ingredients.size()) ? ingredients.get(i + midpoint) : "";
+		// Append ingredients in two columns
+		for (int i = 0; i < midpoint; i++) {
+			String ingredient1 = ingredients.get(i);
+			String ingredient2 = (i + midpoint < ingredients.size())
+					? ingredients.get(i + midpoint)
+					: "";
 
-	        sb.append(String.format("%-" + columnWidth + "s", ingredient1))
-	          .append("\t\t")
-	          .append(String.format("%-" + columnWidth + "s", ingredient2))
-	          .append("\n");
-	    }
+			sb.append(String.format("%-" + columnWidth + "s", ingredient1))
+					.append("\t\t").append(String
+							.format("%-" + columnWidth + "s", ingredient2))
+					.append("\n");
+		}
 
-	    // If the number of ingredients is odd, append the last ingredient in the first column
-	    if (ingredients.size() % 2 != 0) {
-	        sb.append(String.format("%-" + columnWidth + "s", ingredients.get(midpoint))).append("\n");
-	    }
+		// If the number of ingredients is odd, append the last ingredient in
+		// the first column
+		if (ingredients.size() % 2 != 0) {
+			sb.append(String.format("%-" + columnWidth + "s",
+					ingredients.get(midpoint))).append("\n");
+		}
 
-	    sb.append("Instructions:\n").append(instructions).append("Tags: " + tagList);
-	    return sb.toString();
+		sb.append("Instructions:\n").append(instructions)
+				.append("Tags: " + tagList);
+		return sb.toString();
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(ingredients, instructions, name);
-		//auto generated
+		// auto generated
 	}
 
 	@Override
@@ -218,7 +234,7 @@ public class Recipe implements Serializable {
 		return Objects.equals(ingredients, other.ingredients)
 				&& Objects.equals(instructions, other.instructions)
 				&& Objects.equals(name, other.name);
-		//auto generated
+		// auto generated
 	}
 
 }
