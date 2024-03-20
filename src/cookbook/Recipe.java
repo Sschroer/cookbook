@@ -69,13 +69,13 @@ public class Recipe implements Serializable {
 	 * @param type
 	 */
 	public Recipe(String name, ArrayList<String> ingredients,
-			String instructions, MealType tag) {
+			String instructions, String tag) {
 		this.name = name;
 		this.ingredients = ingredients;
 		this.instructions = instructions;
 
 		tagList = new HashSet<>();
-		tagList.add(tag);
+		addTag(tag);
 	}
 
 	/**
@@ -140,20 +140,20 @@ public class Recipe implements Serializable {
 	 * @return
 	 * @throws TypeNotFoundException
 	 */
-	public boolean addTag(String tag)  {
+	public boolean addTag(String tag) {
 		String modTag = tag.replaceAll(" ", "_");
 		MealType foodType;
-		
+
 		try {
 			foodType = getType(modTag);
 			tagList.add(foodType);
 			return true;
-			
+
 		} catch (TypeNotFoundException e) {
 			e.printStackTrace();
 			return false;
 		}
-	
+
 	}
 
 	/**
@@ -170,7 +170,8 @@ public class Recipe implements Serializable {
 			}
 		}
 
-		throw new TypeNotFoundException("The Tag you entered does not exist.");
+		throw new TypeNotFoundException(
+				"The tag you entered is not the MealType list.");
 	}
 
 	@Override

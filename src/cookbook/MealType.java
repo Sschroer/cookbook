@@ -35,6 +35,8 @@ public enum MealType {
 	    ASAIN,
 	    JAPANESE,
 	    MEXICAN,
-	    GERMAN
+	    GERMAN,
+	    SEAFOOD,
+	    FISH
 }
 

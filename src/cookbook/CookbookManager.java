@@ -260,13 +260,7 @@ public class CookbookManager {
 								""");
 						scnr.nextLine();
 						String tag = scnr.nextLine();
-						
-						try {
-							recipe.addTag(tag);
-						} catch (TypeNotFoundException e) {
-							e.getMessage();
-						}
-						
+						recipe.addTag(tag);
 						breakline();
 						break;
 						
