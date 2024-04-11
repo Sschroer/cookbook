@@ -3,19 +3,24 @@ package cookbook;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
- * This is the cookbook object.
+ * Represents a cookbook containing a collection of recipes. Each cookbook has a
+ * title and a list of recipes.
  * 
  * @author Stephen Schroer
- *
  */
-
-
 @SuppressWarnings("serial")
 public class Cookbook implements Serializable {
+	/**
+     * The title of the cookbook.
+     */
 	private String title;
+	/**
+     * The list of recipes contained in the cookbook.
+     */
 	private ArrayList<Recipe> recipes;
 
 	/**
@@ -27,7 +32,10 @@ public class Cookbook implements Serializable {
 	}
 
 	/**
+	 * Constructor that assigns name to new cookbook.
+	 * 
 	 * @param title
+	 *            Cookbook title
 	 */
 	public Cookbook(String title) {
 		this.title = title;
@@ -35,8 +43,12 @@ public class Cookbook implements Serializable {
 	}
 
 	/**
+	 * Consructor that creates a titles cookbook with recipies already in it.
+	 * 
 	 * @param title
+	 *            Cookbook tile
 	 * @param recipes
+	 *            List of Recipies
 	 */
 	public Cookbook(String title, ArrayList<Recipe> recipes) {
 		this.title = title;
@@ -61,7 +73,7 @@ public class Cookbook implements Serializable {
 	/**
 	 * @return the recipes
 	 */
-	public ArrayList<Recipe> getRecipes() {
+	public List<Recipe> getRecipes() {
 		return recipes;
 	}
 
@@ -78,7 +90,7 @@ public class Cookbook implements Serializable {
 	 */
 	public void displayContents() {
 		String contents = "";
-		ArrayList<String> recipeNames = new ArrayList<>();
+		List<String> recipeNames = new ArrayList<>();
 
 		for (Recipe recipe : recipes) {
 			recipeNames.add(recipe.getName());
@@ -108,10 +120,12 @@ public class Cookbook implements Serializable {
 	}
 
 	/**
-	 * Checks to see if recipe is in the cookbook.
+	 * Checks if the recipe list contains a recipe with the given name.
 	 * 
 	 * @param recipeName
-	 * @return
+	 *            The name of the recipe to check for.
+	 * @return True if the recipe list contains the recipe with the given name,
+	 *         false otherwise.
 	 */
 	public boolean contains(String recipeName) {
 		if (getIndex(recipeName) == -1) {
@@ -121,6 +135,13 @@ public class Cookbook implements Serializable {
 		}
 	}
 
+	/**
+	 * Retrieves the recipe with the given name.
+	 * 
+	 * @param recipeName
+	 *            The name of the recipe to retrieve.
+	 * @return The recipe object if found, otherwise null.
+	 */
 	public Recipe getRecipe(String recipeName) {
 		if (contains(recipeName)) {
 			return recipes.get(getIndex(recipeName));
@@ -128,11 +149,14 @@ public class Cookbook implements Serializable {
 			return null;
 		}
 	}
+
 	/**
-	 * Displays requested recipie
+	 * Displays the details of a recipe with the given name.
 	 * 
 	 * @param recipeName
+	 *            The name of the recipe to display.
 	 * @throws Exception
+	 *             If the recipe with the given name is not found.
 	 */
 	public void showRecipe(String recipeName) throws Exception {
 		if (contains(recipeName)) {
@@ -148,7 +172,7 @@ public class Cookbook implements Serializable {
 	@Override
 	public int hashCode() {
 		return Objects.hash(recipes, title);
-		// auto generated
+
 	}
 
 	@Override
@@ -162,7 +186,6 @@ public class Cookbook implements Serializable {
 		Cookbook other = (Cookbook) obj;
 		return Objects.equals(recipes, other.recipes)
 				&& Objects.equals(title, other.title);
-		// auto generated
 	}
 
 }

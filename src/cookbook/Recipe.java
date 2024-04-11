@@ -6,20 +6,32 @@ import java.util.HashSet;
 import java.util.Objects;
 
 /**
- * This the Recipe Class
- * 
+ * Represents a recipe containing ingredients, instructions, and tags.
  * @author Stephen Schroer
- *
  */
 @SuppressWarnings("serial")
 public class Recipe implements Serializable {
+	 /**
+     * The name of the recipe.
+     */
 	private String name;
+	
+	/**
+     * The list of ingredients required for the recipe.
+     */
 	private ArrayList<String> ingredients;
+	 /**
+     * The instructions for preparing the recipe.
+     */
 	private String instructions;
+	
+	/**
+     * The set of tags associated with the recipe.
+     */
 	private HashSet<MealType> tagList;
 
 	/**
-	 * 
+	 * The default constructor for a recipe. 
 	 */
 	public Recipe() {
 		name = "";
@@ -29,7 +41,11 @@ public class Recipe implements Serializable {
 	}
 
 	/**
+	 * Constructs a new Recipe object with the given name. Initializes the
+	 * ingredients list, instructions, and tag list.
+	 *
 	 * @param name
+	 *            the name of the recipe
 	 */
 	public Recipe(String name) {
 		this.name = name;
@@ -39,8 +55,13 @@ public class Recipe implements Serializable {
 	}
 
 	/**
+	 * Constructs a new Recipe object with the given name and list of
+	 * ingredients. Initializes the instructions and tag list.
+	 *
 	 * @param name
+	 *            the name of the recipe
 	 * @param ingredients
+	 *            the list of ingredients for the recipe
 	 */
 	public Recipe(String name, ArrayList<String> ingredients) {
 		this.name = name;
@@ -50,9 +71,15 @@ public class Recipe implements Serializable {
 	}
 
 	/**
+	 * Constructs a new Recipe object with the given name, list of ingredients,
+	 * and instructions. Initializes the tag list.
+	 *
 	 * @param name
+	 *            the name of the recipe
 	 * @param ingredients
+	 *            the list of ingredients for the recipe
 	 * @param instructions
+	 *            the instructions for preparing the recipe
 	 */
 	public Recipe(String name, ArrayList<String> ingredients,
 			String instructions) {
@@ -63,10 +90,18 @@ public class Recipe implements Serializable {
 	}
 
 	/**
+	 * Constructs a new Recipe object with the given name, list of ingredients,
+	 * instructions, and tag. Initializes the tag list and adds the provided
+	 * tag.
+	 *
 	 * @param name
+	 *            the name of the recipe
 	 * @param ingredients
+	 *            the list of ingredients for the recipe
 	 * @param instructions
-	 * @param type
+	 *            the instructions for preparing the recipe
+	 * @param tag
+	 *            the tag associated with the recipe
 	 */
 	public Recipe(String name, ArrayList<String> ingredients,
 			String instructions, String tag) {
@@ -134,11 +169,12 @@ public class Recipe implements Serializable {
 	}
 
 	/**
-	 * This method adds a tag to the tagList
+	 * Adds a tag to the list of meal types. Replaces spaces in the tag with
+	 * underscores before adding.
 	 * 
 	 * @param tag
-	 * @return
-	 * @throws TypeNotFoundException
+	 *            The tag to be added.
+	 * @return True if the tag is successfully added, false otherwise.
 	 */
 	public boolean addTag(String tag) {
 		String modTag = tag.replaceAll(" ", "_");
